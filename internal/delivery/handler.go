@@ -47,6 +47,7 @@ func (h *Handler) makeShortUrl(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write([]byte(ps.ShortUrl))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 }
@@ -70,4 +71,9 @@ func (h *Handler) getLongUrlByShort(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = w.Write([]byte(model.LongUrl))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
 }

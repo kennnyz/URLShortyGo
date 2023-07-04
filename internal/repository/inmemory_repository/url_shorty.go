@@ -2,11 +2,13 @@ package inmemory_repository
 
 import (
 	"ozonTech/muhtarov/internal/models"
+	"sync"
 )
 
 type UrlRepoInMemory struct {
 	shortedToLong map[string]models.UrlStruct
 	longToShorted map[string]models.UrlStruct
+	mutex         *sync.RWMutex
 }
 
 func NewUrlShortRepo() *UrlRepoInMemory {
@@ -22,8 +24,10 @@ func (e *UrlRepoInMemory) AddUrl(urlStruct models.UrlStruct) (models.UrlStruct, 
 		return e.longToShorted[urlStruct.LongUrl], nil
 	}
 
+	e.mutex.Lock()
 	e.longToShorted[urlStruct.LongUrl] = urlStruct
 	e.shortedToLong[urlStruct.ShortUrl] = urlStruct
+	e.mutex.Unlock()
 
 	return urlStruct, nil
 }
