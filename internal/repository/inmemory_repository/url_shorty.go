@@ -8,7 +8,7 @@ import (
 type UrlRepoInMemory struct {
 	shortedToLong map[string]models.UrlStruct
 	longToShorted map[string]models.UrlStruct
-	mutex         *sync.RWMutex
+	mutex         sync.RWMutex
 }
 
 func NewUrlShortRepo() *UrlRepoInMemory {

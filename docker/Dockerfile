@@ -1,12 +1,23 @@
-FROM golang:1.20-alpine
-RUN apk add build-base
+FROM golang:alpine AS builder
 
-EXPOSE 8080
 WORKDIR /app
-COPY ../.. /app
 
-WORKDIR ./app
+COPY go.mod .
+COPY go.sum .
 
-RUN go mod download && go mod verify && go build -o .
 
-CMD ["./app"]
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o main ./cmd/main.go
+
+FROM alpine
+
+WORKDIR /app
+
+COPY configs/config.json /app/configs/config.json
+COPY --from=builder /app/main /app/main
+
+CMD ["/app/main"]
