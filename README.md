@@ -28,12 +28,12 @@ URLShorty is a URL shortening service implemented in Go. It allows users to shor
 ## Пример запросов к сервису:
 POST /make-short-url?url=https://www.google.com
 Response: 
-```json
+```
     4gT7zf1Wch
 ```
 
 GET /get-long-url?url=4gT7zf1Wch
 Response: 
-```json
+```
     https://www.google.com
 ```
