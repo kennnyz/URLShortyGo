@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ozon
+    ports:
+      - 5432:5432
+    networks:
+      - my-network
+  url-shortener:
+    build:
+      context: .
+      dockerfile: ./docker/rpc/Dockerfile
+      environment:
+        DB_DSN: "host=host.docker.internal port=5432 user=postgres password=password dbname=ozon sslmode=disable timezone=UTC connect_timeout=5"
+      ports:
+        - 12345:12345
+      depends_on:
+        - db
+      networks:
+        - my-network
+
+networks:
+  my-network:
