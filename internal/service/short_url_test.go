@@ -3,7 +3,10 @@ package service
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 	"math/rand"
+	"ozonTech/muhtarov/internal/models"
+	mock_repository "ozonTech/muhtarov/internal/repository/mock"
 	"testing"
 )
 
@@ -57,4 +60,42 @@ func TestMakeShortURL(t *testing.T) {
 		assert.NotEmpty(t, urlStruct.ShortUrl, "ShortUrl is empty")
 		assert.True(t, len(urlStruct.ShortUrl) == 10, "Invalid len short url: %d", urlStruct.Id, len(urlStruct.ShortUrl), urlStruct.ShortUrl, urlStruct.LongUrl)
 	}
+}
+
+func TestURLShortyService(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRepo := mock_repository.NewMockURLShortyRepository(ctrl)
+
+	// Ожидаем вызов метода AddUrl с определенным аргументом и возвращаем значения
+	expectedUrlStruct := models.UrlStruct{
+		LongUrl:  "www.example.com",
+		ShortUrl: "78HxvnMug9",
+		Id:       96569598279802005,
+	}
+	mockRepo.EXPECT().AddUrl(models.UrlStruct{
+		LongUrl:  "www.example.com",
+		ShortUrl: "78HxvnMug9",
+		Id:       96569598279802005,
+	}).Return(expectedUrlStruct, nil)
+
+	// Создаем экземпляр сервиса с моком репозитория
+	s := NewURLShortyService(mockRepo)
+
+	// Вызываем метод AddUrl
+	//urlStruct, err := s.AddUrl("www.example.com")
+
+	url, err := s.repo.AddUrl(models.UrlStruct{
+		LongUrl:  "www.example.com",
+		ShortUrl: "78HxvnMug9",
+		Id:       96569598279802005,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Проверяем, что нет ошибок и значения соответствуют ожиданиям
+	assert.NoError(t, err)
+	assert.Equal(t, expectedUrlStruct, url)
 }

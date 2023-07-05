@@ -20,6 +20,10 @@ func (h *Handler) makeShortUrl(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, models.NotValidUrlErr.Error(), 400)
 	}
 
+	if len(longUrl) <= 10 {
+		http.Error(w, models.NotValidUrlErr.Error(), 400)
+	}
+
 	ps, err := h.service.UrlShortyService.AddUrl(longUrl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
