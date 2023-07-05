@@ -4,7 +4,7 @@ import (
 	"ozonTech/muhtarov/internal/repository"
 )
 
-const base62Charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const base62Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 type Service struct {
 	UrlShortyService URLShorty

@@ -2,11 +2,11 @@ package service
 
 import (
 	"hash/fnv"
-	"math/big"
 	"ozonTech/muhtarov/internal/models"
 	"ozonTech/muhtarov/internal/repository"
 )
 
+//go:generate mockgen -source=short_url.go -destination=mock/mock.go
 type URLShorty interface {
 	AddUrl(mail string) (models.UrlStruct, error)
 	GetFullUrl(keyword string) (models.UrlStruct, error) // check if user exists
@@ -35,7 +35,6 @@ func (s *URLShortyService) AddUrl(longUrl string) (models.UrlStruct, error) {
 func (s *URLShortyService) GetFullUrl(keyword string) (models.UrlStruct, error) {
 	m, err := s.repo.GetFullUrlByShort(keyword)
 	if err != nil {
-		// TODO logg
 		return models.UrlStruct{}, err
 	}
 
@@ -45,6 +44,11 @@ func (s *URLShortyService) GetFullUrl(keyword string) (models.UrlStruct, error) 
 func (s *URLShortyService) makeShortURL(longURL string) models.UrlStruct {
 	id := generateID(longURL)
 	shortURL := encodeBase62(id)
+	if len(shortURL) < 10 {
+		for i := 0; i <= 10-len(shortURL); i++ {
+			shortURL = "0" + shortURL
+		}
+	}
 	return models.UrlStruct{
 		ShortUrl: shortURL,
 		LongUrl:  longURL,
@@ -67,21 +71,21 @@ func generateID(longURL string) int64 {
 	return id
 }
 
-func encodeBase62(number int64) string {
-
-	base := big.NewInt(int64(len(base62Charset)))
-	result := ""
-
-	zero := big.NewInt(0)
-	n := big.NewInt(number)
-	for n.Cmp(zero) > 0 {
-		quotient := new(big.Int)
-		remainder := new(big.Int)
-		quotient.DivMod(n, base, remainder)
-		index := remainder.Int64()
-		result = string(base62Charset[index]) + result
-		n.Set(quotient)
+func encodeBase62(num int64) string {
+	if num == 0 {
+		return string(base62Charset[0])
 	}
 
-	return result
+	if num < 0 {
+		return "-" + encodeBase62(-num)
+	}
+
+	base62 := make([]byte, 0)
+	for num > 0 {
+		remainder := num % 62
+		base62 = append([]byte{base62Charset[remainder]}, base62...)
+		num /= 62
+	}
+
+	return string(base62)
 }

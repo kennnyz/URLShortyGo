@@ -9,6 +9,8 @@ import (
 	"ozonTech/muhtarov/pkg/database/postgres"
 )
 
+//go:generate mockgen -source=repository.go -destination=mock/mock.go
+
 type URLShortyRepository interface {
 	AddUrl(urlStruct models.UrlStruct) (models.UrlStruct, error)
 	GetFullUrlByShort(shortUrl string) (models.UrlStruct, error) // check if user exists
