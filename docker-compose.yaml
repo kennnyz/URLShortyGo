@@ -17,7 +17,7 @@ services:
     environment:
         DB_DSN: "host=db port=5432 user=postgres password=password dbname=ozon sslmode=disable timezone=UTC connect_timeout=5"
     ports:
-        - 12345:8080
+        - 8080:8080
     depends_on:
         - db
     networks:
