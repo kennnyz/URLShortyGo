@@ -8,7 +8,7 @@ URLShorty is a URL shortening service implemented in Go. It allows users to shor
 ## Запуск сервиса локально:
 1. Запуск сервера
 ```shell
-  go run main.go
+  go run cmd/main.go
 ```
 2. Миграции в базу данных
 ```shell
