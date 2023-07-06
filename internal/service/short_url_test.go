@@ -63,30 +63,53 @@ func TestMakeShortURL(t *testing.T) {
 }
 
 func TestURLShortyService(t *testing.T) {
-	t.Parallel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockRepo := mock_service.NewMockURLShortyRepository(ctrl)
-
-	// Ожидаем вызов метода AddUrl с определенным аргументом и возвращаем значения
+	type mockBehavior func(s *mock_service.MockURLShortyRepository, urlStruct models.UrlStruct)
 	expectedUrlStruct := models.UrlStruct{
 		LongUrl:  "www.example.com",
 		ShortUrl: "78HxvnMug9",
 		Id:       96569598279802005,
 	}
 
-	mockRepo.EXPECT().AddUrl(expectedUrlStruct).Return(expectedUrlStruct, nil)
+	testTable := []struct {
+		name              string
+		inputUrlStruct    models.UrlStruct
+		mockBehavior      mockBehavior
+		expectedUrlStruct models.UrlStruct
+		expectedErr       error
+	}{
+		{
+			name:           "ok",
+			inputUrlStruct: expectedUrlStruct,
+			mockBehavior: func(s *mock_service.MockURLShortyRepository, urlStruct models.UrlStruct) {
+				s.EXPECT().AddUrl(expectedUrlStruct).Return(expectedUrlStruct, nil)
+			},
+			expectedUrlStruct: expectedUrlStruct,
+		},
+		{
+			name:           "invalid url",
+			inputUrlStruct: expectedUrlStruct,
+			mockBehavior: func(s *mock_service.MockURLShortyRepository, urlStruct models.UrlStruct) {
+				s.EXPECT().AddUrl(expectedUrlStruct).Return(models.UrlStruct{}, models.NotValidUrlErr)
+			},
+			expectedUrlStruct: models.UrlStruct{},
+			expectedErr:       models.NotValidUrlErr,
+		},
+	}
 
-	s := NewURLShortyService(mockRepo)
-	url, err := s.repo.AddUrl(expectedUrlStruct)
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			// init deps
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-	assert.NoError(t, err)
-	assert.NoError(t, err)
-	assert.Equal(t, expectedUrlStruct, url)
+			mockRepo := mock_service.NewMockURLShortyRepository(ctrl)
+			testCase.mockBehavior(mockRepo, testCase.inputUrlStruct)
 
-	t.Run("some", func(t *testing.T) {
-		t.Parallel() // одновременно
-	})
+			s := NewURLShortyService(mockRepo)
+			url, err := s.repo.AddUrl(expectedUrlStruct)
+
+			assert.Equal(t, err, testCase.expectedErr)
+			assert.Equal(t, testCase.expectedUrlStruct, url)
+		})
+	}
 }
