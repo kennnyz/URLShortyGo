@@ -1,4 +1,4 @@
 {
   "server_addr" : ":8080",
-  "storage_type": "inmemory"
+  "storage_type": "postgres"
 }

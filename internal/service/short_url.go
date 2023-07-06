@@ -3,20 +3,22 @@ package service
 import (
 	"hash/fnv"
 	"ozonTech/muhtarov/internal/models"
-	"ozonTech/muhtarov/internal/repository"
 )
 
 //go:generate mockgen -source=short_url.go -destination=mock/mock.go
-type URLShorty interface {
-	AddUrl(mail string) (models.UrlStruct, error)
-	GetFullUrl(keyword string) (models.UrlStruct, error) // check if user exists
+
+const base62Charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+type URLShortyRepository interface {
+	AddUrl(urlStruct models.UrlStruct) (models.UrlStruct, error)
+	GetFullUrlByShort(shortUrl string) (models.UrlStruct, error) // check if user exists
 }
 
 type URLShortyService struct {
-	repo repository.URLShortyRepository
+	repo URLShortyRepository
 }
 
-func NewURLShortyService(repo repository.URLShortyRepository) *URLShortyService {
+func NewURLShortyService(repo URLShortyRepository) *URLShortyService {
 	return &URLShortyService{
 		repo: repo,
 	}

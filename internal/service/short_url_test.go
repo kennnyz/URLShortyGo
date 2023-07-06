@@ -6,7 +6,7 @@ import (
 	"go.uber.org/mock/gomock"
 	"math/rand"
 	"ozonTech/muhtarov/internal/models"
-	mock_repository "ozonTech/muhtarov/internal/repository/mock"
+	mock_service "ozonTech/muhtarov/internal/service/mock"
 	"testing"
 )
 
@@ -63,10 +63,12 @@ func TestMakeShortURL(t *testing.T) {
 }
 
 func TestURLShortyService(t *testing.T) {
+	t.Parallel()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockRepo := mock_repository.NewMockURLShortyRepository(ctrl)
+	mockRepo := mock_service.NewMockURLShortyRepository(ctrl)
 
 	// Ожидаем вызов метода AddUrl с определенным аргументом и возвращаем значения
 	expectedUrlStruct := models.UrlStruct{
@@ -74,15 +76,17 @@ func TestURLShortyService(t *testing.T) {
 		ShortUrl: "78HxvnMug9",
 		Id:       96569598279802005,
 	}
+
 	mockRepo.EXPECT().AddUrl(expectedUrlStruct).Return(expectedUrlStruct, nil)
 
 	s := NewURLShortyService(mockRepo)
 	url, err := s.repo.AddUrl(expectedUrlStruct)
-	if err != nil {
-		t.Error(err)
-	}
 
-	// Проверяем, что нет ошибок и значения соответствуют ожиданиям
+	assert.NoError(t, err)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedUrlStruct, url)
+
+	t.Run("some", func(t *testing.T) {
+		t.Parallel() // одновременно
+	})
 }

@@ -22,8 +22,8 @@ func Run(configPath string) {
 		panic(err)
 	}
 
-	services := service.NewService(repos)
-	handler := delivery.NewHandler(services)
+	urlShorty := service.NewURLShortyService(repos)
+	handler := delivery.NewHandler(urlShorty)
 
 	httpServer := server.NewHTTPServer(cfg.ServerAddr, handler.Init())
 	fmt.Println("Server is listening..." + cfg.ServerAddr)

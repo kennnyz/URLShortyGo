@@ -3,20 +3,13 @@ package repository
 import (
 	"fmt"
 	"ozonTech/muhtarov/internal/config"
-	"ozonTech/muhtarov/internal/models"
 	"ozonTech/muhtarov/internal/repository/inmemory_repository"
 	"ozonTech/muhtarov/internal/repository/postgres_repository"
+	"ozonTech/muhtarov/internal/service"
 	"ozonTech/muhtarov/pkg/database/postgres"
 )
 
-//go:generate mockgen -source=repository.go -destination=mock/mock.go
-
-type URLShortyRepository interface {
-	AddUrl(urlStruct models.UrlStruct) (models.UrlStruct, error)
-	GetFullUrlByShort(shortUrl string) (models.UrlStruct, error) // check if user exists
-}
-
-func NewRepository(cfg *config.Config) (URLShortyRepository, error) {
+func NewRepository(cfg *config.Config) (service.URLShortyRepository, error) {
 	switch cfg.StorageType {
 	case "inmemory":
 		return inmemory_repository.NewUrlShortRepo(), nil

@@ -2,17 +2,22 @@ package delivery
 
 import (
 	"net/http"
-	"ozonTech/muhtarov/internal/service"
+	"ozonTech/muhtarov/internal/models"
 )
+
+type URLShorty interface {
+	AddUrl(mail string) (models.UrlStruct, error)
+	GetFullUrl(keyword string) (models.UrlStruct, error) // check if user exists
+}
 
 type Handler struct {
 	// access to business logic
-	service *service.Service
+	urlShorty URLShorty
 }
 
-func NewHandler(service *service.Service) *Handler {
+func NewHandler(urlShortyService URLShorty) *Handler {
 	return &Handler{
-		service: service,
+		urlShorty: urlShortyService,
 	}
 }
 

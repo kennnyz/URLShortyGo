@@ -25,8 +25,10 @@ func (e *UrlRepoInMemory) AddUrl(urlStruct models.UrlStruct) (models.UrlStruct, 
 	}
 
 	e.mutex.Lock()
+
 	e.longToShorted[urlStruct.LongUrl] = urlStruct
 	e.shortedToLong[urlStruct.ShortUrl] = urlStruct
+
 	e.mutex.Unlock()
 
 	return urlStruct, nil
