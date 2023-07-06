@@ -74,23 +74,10 @@ func TestURLShortyService(t *testing.T) {
 		ShortUrl: "78HxvnMug9",
 		Id:       96569598279802005,
 	}
-	mockRepo.EXPECT().AddUrl(models.UrlStruct{
-		LongUrl:  "www.example.com",
-		ShortUrl: "78HxvnMug9",
-		Id:       96569598279802005,
-	}).Return(expectedUrlStruct, nil)
+	mockRepo.EXPECT().AddUrl(expectedUrlStruct).Return(expectedUrlStruct, nil)
 
-	// Создаем экземпляр сервиса с моком репозитория
 	s := NewURLShortyService(mockRepo)
-
-	// Вызываем метод AddUrl
-	//urlStruct, err := s.AddUrl("www.example.com")
-
-	url, err := s.repo.AddUrl(models.UrlStruct{
-		LongUrl:  "www.example.com",
-		ShortUrl: "78HxvnMug9",
-		Id:       96569598279802005,
-	})
+	url, err := s.repo.AddUrl(expectedUrlStruct)
 	if err != nil {
 		t.Error(err)
 	}
