@@ -6,6 +6,5 @@ migrate-down:
 
 run-up:
 	docker-compose up -d
-	migrate-up
 
 .PHONY: migrate-down migrate-up run-up
