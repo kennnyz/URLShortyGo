@@ -10,6 +10,10 @@ URLShorty is a URL shortening service implemented in Go. It allows users to shor
 ```shell
   go run cmd/main.go
 ```
+3. Запуск бд
+```shell
+  make createdb
+```
 2. Миграции в базу данных
 ```shell
   make migrate-up
