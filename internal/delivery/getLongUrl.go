@@ -15,6 +15,7 @@ func (h *Handler) getLongUrlByShort(w http.ResponseWriter, r *http.Request) {
 	shortUrl := r.URL.Query().Get("url")
 	if shortUrl == "" {
 		http.Error(w, models.NotValidUrlErr.Error(), 400)
+		return
 	}
 
 	model, err := h.urlShorty.GetFullUrl(shortUrl)
