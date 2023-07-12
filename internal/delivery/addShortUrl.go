@@ -8,11 +8,8 @@ import (
 
 func (h *Handler) makeShortUrl(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		msg := "method not provide!"
-		_, err := w.Write([]byte(msg))
-		if err != nil {
-			return
-		}
+		http.Error(w, models.MethodNotProvideErr.Error(), 400)
+		return
 	}
 
 	longUrl := r.URL.Query().Get("url")

@@ -8,11 +8,8 @@ import (
 
 func (h *Handler) getLongUrlByShort(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		msg := "method not provide!"
-		_, err := w.Write([]byte(msg))
-		if err != nil {
-			return
-		}
+		http.Error(w, models.MethodNotProvideErr.Error(), 400)
+		return
 	}
 
 	shortUrl := r.URL.Query().Get("url")
