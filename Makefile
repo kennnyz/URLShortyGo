@@ -10,4 +10,7 @@ createdb:
 run-up:
 	docker-compose up -d
 
+test:
+	go test  ./...
+
 .PHONY: migrate-down migrate-up run-up

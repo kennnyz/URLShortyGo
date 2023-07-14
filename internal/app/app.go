@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"ozonTech/muhtarov/internal/config"
-	"ozonTech/muhtarov/internal/delivery"
+	"ozonTech/muhtarov/internal/delivery/http"
 	"ozonTech/muhtarov/internal/repository"
 	"ozonTech/muhtarov/internal/server"
 	"ozonTech/muhtarov/internal/service"
@@ -23,7 +23,7 @@ func Run(configPath string) {
 	}
 
 	urlShorty := service.NewURLShortyService(repos)
-	handler := delivery.NewHandler(urlShorty)
+	handler := http.NewHandler(urlShorty)
 
 	httpServer := server.NewHTTPServer(cfg.ServerAddr, handler.Init())
 	fmt.Println("Server is listening..." + cfg.ServerAddr)

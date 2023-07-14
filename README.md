@@ -3,18 +3,18 @@ URLShorty is a URL shortening service implemented in Go. It allows users to shor
 
 ## Заполнение конфигов:
 1. Заполнить файл .env.example и переименовать в .env
-2. Использовать configs/configs.go для заполнения конфигов
+2. Использовать configs/configs.go для заполнения конфигов, тип хранилища на выбор - inmemory или postgres
 
 ## Запуск сервиса локально:
 1. Запуск сервера
 ```shell
   go run cmd/main.go
 ```
-3. Запуск бд
+2. Запуск бд (не нужно если в конфиге поставили inmemory хранилище)
 ```shell
   make createdb
 ```
-2. Миграции в базу данных
+3. Миграции в базу данных
 ```shell
   make migrate-up
 ```

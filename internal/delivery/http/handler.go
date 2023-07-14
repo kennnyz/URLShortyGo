@@ -1,12 +1,14 @@
-package delivery
+package http
 
 import (
 	"net/http"
 	"ozonTech/muhtarov/internal/models"
 )
 
+//go:generate mockgen -source=handler.go -destination=mock/mock.go
+
 type URLShorty interface {
-	AddUrl(mail string) (models.UrlStruct, error)
+	AddUrl(longUrl string) (models.UrlStruct, error)
 	GetFullUrl(keyword string) (models.UrlStruct, error) // check if user exists
 }
 
