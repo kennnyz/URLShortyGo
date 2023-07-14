@@ -32,11 +32,14 @@ URLShorty is a URL shortening service implemented in Go. It allows users to shor
 По умолчанию запуск на localhost:8080
 
 ## Пример запросов к сервису:
+**Сократить оригинальный URL**
+
 POST http://localhost:8080/make-short-url?url=https://www.google.com
 Response: 
 ```
     1wyI4Mkj7L
 ```
+**Получить оригинальный URL**
 
 GET http://localhost:8080/get-long-url?url=1wyI4Mkj7L
 Response: 
